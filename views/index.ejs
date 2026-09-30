@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Limón — Healthy fast food on the go</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="home bg-warm-cream text-forest-ink">
+
+<header class="bg-warm-cream relative z-30">
+  <nav class="mx-auto max-w-[1320px] px-5 py-3 md:py-4 flex items-center justify-between gap-3 xl:grid xl:grid-cols-[1fr_auto_1fr]" aria-label="Main">
+    <ul class="hidden xl:flex items-center gap-1">
+      <li><a class="nav-a" href="/" aria-current="page" data-i18n="nav_home">Home</a></li>
+      <li><a class="nav-a" href="#menu" data-i18n="nav_menu">Menu</a></li>
+      <li><a class="nav-a" href="#about" data-i18n="nav_about">About us</a></li>
+      <li><a class="nav-a" href="#faq" data-i18n="nav_faq">FAQ</a></li>
+      <li><a class="nav-a" href="#contact" data-i18n="nav_contact">Contact</a></li>
+    </ul>
+    <a href="/" class="text-[42px] md:text-[56px] xl:text-[64px] leading-none font-normal">LIMÓN</a>
+    <div class="flex items-center gap-3 xl:justify-end">
+      <a href="https://www.instagram.com/" rel="noopener" aria-label="Instagram" class="hidden xl:inline-flex items-center gap-2 uppercase text-[16px] font-medium"><span class="hidden 2xl:inline" data-i18n="follow">Follow us on</span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg><span class="hidden 2xl:inline">Instagram</span></a>
+      <div id="langSwitch"></div>
+      <a href="/order" class="btn-lemon hidden sm:inline-flex" data-i18n="order">Order</a>
+      <button id="menuBtn" type="button" class="xl:hidden w-11 h-11 grid place-items-center border border-forest-ink/40" aria-expanded="false" aria-controls="mobileNav" data-i18n-label="nav_menu" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </nav>
+  <div id="mobileNav" class="hidden xl:hidden border-t border-forest-ink/20 bg-warm-cream">
+    <ul class="mx-auto max-w-[1320px] px-5 py-2">
+      <li><a class="m-a" href="/" data-i18n="nav_home">Home</a></li>
+      <li><a class="m-a" href="#menu" data-i18n="nav_menu">Menu</a></li>
+      <li><a class="m-a" href="#about" data-i18n="nav_about">About us</a></li>
+      <li><a class="m-a" href="#faq" data-i18n="nav_faq">FAQ</a></li>
+      <li><a class="m-a" href="#contact" data-i18n="nav_contact">Contact</a></li>
+      <li class="py-4 flex flex-wrap items-center gap-4"><a href="/order" class="btn-lemon" data-i18n="order">Order</a>
+        <a href="https://www.instagram.com/" rel="noopener" class="inline-flex items-center gap-2 uppercase font-medium"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>Instagram</a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+  <section class="relative isolate">
+    <img src="/img/hero.jpg" alt="" class="absolute inset-0 -z-10 w-full h-full object-cover">
+    <div class="absolute inset-0 -z-10 bg-black-olive/45"></div>
+    <div class="mx-auto max-w-[1200px] px-5 py-[60px] md:py-[100px] min-h-[420px] flex flex-col justify-center items-start">
+      <h1 class="text-lemon-zest text-[60px] md:text-[75px] leading-none font-normal" style="letter-spacing:.06em">LIMÓN</h1>
+      <p class="mt-6 text-warm-cream text-[36px] md:text-[46px] leading-[1.1]" style="letter-spacing:.03em" data-i18n="hero_menu">See our menu</p>
+      <a href="/order" class="btn-lemon mt-[40px]"><span data-i18n="order_here">Order here</span> <span aria-hidden="true" class="inline-block rtl:rotate-180">&rarr;</span></a>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="mx-auto max-w-[1200px] px-5 py-[60px] md:py-[100px] grid md:grid-cols-2 gap-[40px] items-center">
+      <div>
+        <h2 class="h-display text-[30px] sm:text-[40px] md:text-[54px]" style="letter-spacing:.04em" data-i18n="about_title">Healthy fast food on the go</h2>
+        <p class="mt-6 text-[22px] leading-[1.6] max-w-[560px]" data-i18n="about_text">At Limón you can get healthy and delicious food on the go. Enjoy one of our colourful poke bowls, our heavenly ceviche or our fruity smoothies and smoothie bowls as take away or through our catering service. We have something for everyone.</p>
+      </div>
+      <img src="/img/about.jpg" alt="" class="w-full">
+    </div>
+  </section>
+
+  <section id="menu">
+    <div class="mx-auto max-w-[1200px] px-5 pb-[80px] grid gap-x-[50px] gap-y-[50px] md:grid-cols-3">
+      <article class="flex flex-col">
+        <img src="/img/ceviche.jpg" alt="" class="w-full aspect-[4/3] object-cover">
+        <h3 class="h-display mt-[30px] text-[36px]" data-i18n="ceviche">Ceviche</h3>
+        <p class="mt-4 text-[19px] leading-[1.6] flex-1" data-i18n="ceviche_text">A traditional Peruvian dish with citrus marinated raw fish served with fresh greens, such as tomato, coriander and pickled red onion. Simply a fantastic combination!</p>
+        <a href="/order" class="link-ghost mt-8 inline-flex items-center gap-3"><span data-i18n="order_now">Order now</span> <span aria-hidden="true" class="rtl:rotate-180">&rarr;</span></a>
+      </article>
+      <article class="flex flex-col">
+        <img src="/img/poke.jpg" alt="" class="w-full aspect-[4/3] object-cover">
+        <h3 class="h-display mt-[30px] text-[36px]" data-i18n="poke">Poke</h3>
+        <p class="mt-4 text-[19px] leading-[1.6] flex-1" data-i18n="poke_text">A glorious clash between Hawaiian and Japanese cultures, served with fresh vegetables and fruits and topped with our own poke sauce.</p>
+        <a href="/order" class="link-ghost mt-8 inline-flex items-center gap-3"><span data-i18n="order_now">Order now</span> <span aria-hidden="true" class="rtl:rotate-180">&rarr;</span></a>
+      </article>
+      <article class="flex flex-col">
+        <img src="/img/smoothie.jpg" alt="" class="w-full aspect-[4/3] object-cover">
+        <h3 class="h-display mt-[30px] text-[36px]" data-i18n="smoothie">Smoothie bowls</h3>
+        <p class="mt-4 text-[19px] leading-[1.6] flex-1" data-i18n="smoothie_text">Why not try smoothie in a bowl instead of a cup? Topped with granola, nuts and fresh fruit. A healthy bowl of deliciousness.</p>
+        <a href="/order" class="link-ghost mt-8 inline-flex items-center gap-3"><span data-i18n="order_now">Order now</span> <span aria-hidden="true" class="rtl:rotate-180">&rarr;</span></a>
+      </article>
+    </div>
+  </section>
+
+  <section class="bg-sage-mist">
+    <div class="mx-auto max-w-[1200px] px-5 py-[60px] md:py-[100px] grid md:grid-cols-2 gap-[40px] items-center">
+      <div>
+        <h2 class="h-display text-[32px] sm:text-[40px] md:text-[54px]" data-i18n="hours_title">Opening hours</h2>
+        <div class="mt-10 grid gap-10 sm:grid-cols-2">
+          <div>
+            <h3 class="h-display text-[26px]">Oslo Frogner</h3>
+            <dl id="hoursList" class="mt-5 grid grid-cols-[1fr_auto] gap-y-3 gap-x-6 text-[19px]"></dl>
+          </div>
+          <div>
+            <h3 class="h-display text-[26px]">Oslo Byporten</h3>
+            <dl class="mt-5 grid grid-cols-[1fr_auto] gap-y-3 gap-x-6 text-[19px]">
+              <dt data-i18n="mon_fri">Monday – Friday</dt><dd class="font-medium" dir="ltr">10:00 – 21:00</dd>
+              <dt data-i18n="sat">Saturday</dt><dd class="font-medium" dir="ltr">10:00 – 20:00</dd>
+              <dt data-i18n="sun">Sunday</dt><dd class="font-medium" dir="ltr">12:00 – 18:00</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+      <img src="/img/bag.jpg" alt="" class="w-full max-w-[520px] justify-self-center mix-blend-multiply">
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="mx-auto max-w-[1200px] px-5 py-[60px]">
+      <h2 class="h-display text-[40px]" data-i18n="faq_title">FAQ</h2>
+      <div class="mt-8 max-w-[720px] divide-y divide-forest-ink/25 border-y border-forest-ink/25">
+        <details class="py-4"><summary class="cursor-pointer text-[22px]" data-i18n="faq1_q">Do you offer vegetarian options?</summary><p class="mt-3 text-[19px] leading-[1.6]" data-i18n="faq1_a">Yes. Ask us about the Avocado Burger and our build-your-own bowls.</p></details>
+        <details class="py-4"><summary class="cursor-pointer text-[22px]" data-i18n="faq2_q">Can I order for delivery?</summary><p class="mt-3 text-[19px] leading-[1.6]" data-i18n="faq2_a">Yes. Choose delivery on the order page and share your location.</p></details>
+        <details class="py-4"><summary class="cursor-pointer text-[22px]" data-i18n="faq3_q">Do you handle allergies?</summary><p class="mt-3 text-[19px] leading-[1.6]" data-i18n="faq3_a">Add a note when you order and we will adjust your dish.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer id="contact" class="border-t-2 border-forest-ink">
+  <div class="mx-auto max-w-[1200px] px-5 pt-[60px] pb-[60px]">
+    <div class="flex flex-wrap items-center gap-x-[100px] gap-y-6">
+      <span class="text-[64px] md:text-[80px] leading-none">LIMÓN</span>
+      <div class="flex gap-[6px]" dir="ltr">
+        <a href="#" aria-label="Facebook" class="w-[60px] h-[60px] grid place-items-center bg-forest-ink text-lemon-zest text-[34px] font-bold">f</a>
+        <a href="https://www.instagram.com/" aria-label="Instagram" rel="noopener" class="w-[60px] h-[60px] grid place-items-center bg-forest-ink text-lemon-zest"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg></a>
+        <a href="#" aria-label="TikTok" class="w-[60px] h-[60px] grid place-items-center bg-forest-ink text-lemon-zest text-[30px]">&#9835;</a>
+      </div>
+    </div>
+    <div class="mt-12 grid md:grid-cols-[180px_1fr_1fr] gap-x-10 gap-y-10">
+      <p class="uppercase font-medium text-black-olive" data-i18n="locations">Our locations</p>
+      <address class="not-italic">
+        <p class="uppercase font-medium text-black-olive">Oslo | Frogner</p>
+        <p class="mt-6 text-[22px] leading-[1.5]" dir="ltr">Hegdehaugsveien 27<br>0352 Oslo</p>
+        <p class="mt-5 text-[22px] font-medium leading-[1.4]" dir="ltr"><a href="tel:+4792974220">929 74 220</a><br><a href="mailto:hei@limon.no">hei@limon.no</a></p>
+      </address>
+      <address class="not-italic">
+        <p class="uppercase font-medium text-black-olive">Oslo | Byporten</p>
+        <p class="mt-6 text-[22px] leading-[1.5]" dir="ltr">Jernbanetorget 6 (1.etg)<br>0154 Oslo</p>
+        <p class="mt-5 text-[22px] font-medium leading-[1.4]" dir="ltr"><a href="tel:+4792942764">929 42 764</a><br><a href="mailto:byporten@limon.no">byporten@limon.no</a></p>
+      </address>
+    </div>
+  </div>
+  <div class="bg-forest-ink text-warm-cream text-[14px]"><div class="mx-auto max-w-[1200px] px-5 py-4">&copy; Limón &nbsp;|&nbsp; <span data-i18n="privacy">Privacy</span></div></div>
+</footer>
+
+<a href="#" data-i18n-label="top" aria-label="Back to top" class="fixed end-6 bottom-6 w-[60px] h-[60px] rounded-full bg-forest-ink text-warm-cream ring-1 ring-lemon-zest grid place-items-center">
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15l7-7 7 7"/></svg>
+</a>
+
+<script src="/i18n.js"></script>
+<script>
+  // L'horaires dyal Frogner kaytjebdo mn database (kaytbeddlo mn /admin)
+  let hours = null;
+  function renderHours() {
+    if (!hours) return;
+    document.getElementById('hoursList').innerHTML = [1, 2, 3, 4, 5, 6, 0].map(d => {
+      const h = hours[d];
+      return `<dt>${LM.day(d)}</dt><dd class="font-medium" dir="ltr">${h.closed ? LM.t('closed_word') : h.open + ' – ' + h.close}</dd>`;
+    }).join('');
+  }
+  fetch('/api/status').then(r => r.json()).then(s => { hours = s.hours; renderHours(); });
+  LM.onChange(renderHours);
+  const mb = document.getElementById('menuBtn'), mn = document.getElementById('mobileNav');
+  mb.addEventListener('click', () => { const open = mn.classList.toggle('hidden') === false; mb.setAttribute('aria-expanded', open); });
+  mn.addEventListener('click', e => { if (e.target.closest('a')) { mn.classList.add('hidden'); mb.setAttribute('aria-expanded', 'false'); } });
+</script>
+</body>
+</html>

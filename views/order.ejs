@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Order — Limón Frogner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="ui bg-white text-neutral-900 pb-28 lg:pb-0">
+<div class="mx-auto max-w-[1400px] px-4 md:px-8">
+
+  <div class="py-3 flex items-center justify-between gap-3">
+    <a href="/" class="inline-flex items-center gap-2 rounded-xl bg-neutral-100 px-4 py-3 text-[16px] font-medium">
+      <svg class="rtl:rotate-180" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>Limón</a>
+    <div id="langSwitch"></div>
+  </div>
+
+  <div class="relative h-[130px] sm:h-[220px] lg:h-[300px] rounded-3xl lg:rounded-[28px] overflow-hidden">
+    <img src="/img/banner.jpg" alt="Limón Frogner" class="w-full h-full object-cover">
+    <span class="hidden lg:block absolute end-4 bottom-4 rounded-full bg-white/90 px-4 py-2 text-[14px]" data-i18n="delivery_chip">Delivery time: 20 min</span>
+  </div>
+
+  <div class="flex flex-col items-center text-center lg:flex-row lg:items-end lg:text-start gap-x-5 gap-y-2 -mt-[52px] lg:-mt-16 px-3 lg:px-5">
+    <div style="position:relative;z-index:10" class="w-[104px] h-[104px] sm:w-[120px] sm:h-[120px] lg:w-[170px] lg:h-[170px] shrink-0 rounded-full bg-lemon-zest ring-[6px] ring-white grid place-items-center text-forest-ink text-[64px] lg:text-[110px] font-light leading-none" aria-hidden="true">Ó</div>
+    <div class="lg:pb-6">
+      <h1 class="text-[26px] lg:text-[32px] font-semibold lg:font-medium leading-tight">Limón Frogner</h1>
+      <p class="text-[14px] lg:text-[16px]"><span id="openState" class="font-medium"></span><span id="sep"> | </span><span id="openNote"></span></p>
+      <p class="mt-1 lg:hidden text-[14px] inline-flex items-center gap-1.5"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span data-i18n="prep">Preparation time: 20 min</span></p>
+    </div>
+    <label class="hidden lg:block lg:ms-auto w-[500px] lg:pb-6">
+      <span class="sr-only" data-i18n="search">Search</span>
+      <input id="search" type="search" data-i18n-ph="search" placeholder="Search" class="w-full rounded-full bg-neutral-100 px-6 py-4 text-[18px] outline-none focus:ring-2 focus:ring-black">
+    </label>
+  </div>
+
+  <div id="closedBanner" class="hidden mt-4 rounded-2xl border border-red-200 bg-red-50 px-4 py-4 text-center" role="alert">
+    <p class="text-[16px] font-semibold text-red-700" data-i18n="closed_msg">Sorry, we are closed right now and cannot take orders.</p>
+    <p id="closedWhen" class="mt-1 text-[15px] text-red-700"></p>
+  </div>
+
+  <div class="lg:hidden mt-4"><div class="grid grid-cols-2 rounded-full bg-neutral-100 p-1.5 text-[16px]" role="group">
+    <button data-mode="dine-in" class="rounded-full py-2.5" data-i18n="dine_in">Dine-in</button>
+    <button data-mode="delivery" class="rounded-full py-2.5" data-i18n="delivery">Delivery</button>
+  </div></div>
+
+  <div class="mt-3 lg:mt-4 flex items-center gap-2 border-b border-neutral-200 py-3">
+    <button id="searchToggle" class="lg:hidden shrink-0 w-10 h-10 grid place-items-center" data-i18n-label="search" aria-label="Search"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+    <nav id="tabs" class="flex gap-1 overflow-x-auto" aria-label="Categories"></nav>
+  </div>
+  <div id="searchRow" class="hidden lg:hidden mt-3"><input id="searchM" type="search" data-i18n-ph="search" placeholder="Search" class="w-full rounded-full bg-neutral-100 px-5 py-3 text-[16px] outline-none focus:ring-2 focus:ring-black"></div>
+
+  <div class="mt-6 lg:mt-8 grid lg:grid-cols-[1fr_440px] gap-8 items-start">
+    <section aria-label="Menu">
+      <div class="flex items-center justify-between gap-4">
+        <h2 id="catTitle" class="text-[22px] lg:text-[28px] font-medium"></h2>
+        <button id="allergyBtn" class="inline-flex items-center gap-2 lg:gap-3 rounded-xl border border-neutral-200 px-3 lg:px-5 py-3 lg:py-4 text-[14px] lg:text-[16px]"><span aria-hidden="true">⚠️</span><span data-i18n="allergies_btn">Food allergies</span></button>
+      </div>
+      <p id="allergyInfo" class="hidden mt-4 rounded-xl bg-yellow-50 border border-yellow-200 p-4 text-[15px]" data-i18n="allergies_info">Tell us about any allergies in the note when you confirm your order, or ask the staff.</p>
+      <div id="grid" class="mt-3 lg:mt-6 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 lg:gap-5"></div>
+    </section>
+
+    <aside id="basket" class="hidden lg:flex lg:sticky lg:top-4 rounded-[28px] border border-neutral-100 p-5 flex-col min-h-[520px]" style="box-shadow:0 0 24px rgba(0,0,0,.07)">
+      <div class="grid grid-cols-2 rounded-full bg-neutral-100 p-1.5 text-[18px]" role="group">
+        <button data-mode="dine-in" class="rounded-full py-3" data-i18n="dine_in">Dine-in</button>
+        <button data-mode="delivery" class="rounded-full py-3" data-i18n="delivery">Delivery</button>
+      </div>
+      <div class="flex-1 overflow-y-auto py-4">
+        <div id="empty" class="h-full min-h-[300px] flex flex-col items-center justify-center gap-4 text-neutral-400">
+          <div class="w-[150px] h-[150px] rounded-full bg-neutral-100 grid place-items-center"><svg width="70" height="70" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 10h18l-2 10H5L3 10zM8 10l3-6M16 10l-3-6M9 14v3M12 14v3M15 14v3"/></svg></div>
+          <p class="text-[22px]" data-i18n="cart_empty">The cart is empty</p>
+        </div>
+        <ul id="lines" class="divide-y divide-neutral-100"></ul>
+      </div>
+      <button id="checkoutBtn" disabled class="w-full rounded-full bg-black text-white py-5 text-[20px] flex items-center justify-center gap-3 disabled:opacity-40">
+        <span id="count" class="w-8 h-8 rounded-full bg-white text-black grid place-items-center text-[16px] font-semibold">0</span><span data-i18n="checkout">Checkout</span><span aria-hidden="true">|</span><span id="total">0 DH</span>
+      </button>
+    </aside>
+  </div>
+</div>
+
+<button id="barM" class="hidden lg:!hidden fixed inset-x-4 bottom-4 z-20 rounded-full bg-black text-white py-4 text-[18px] items-center justify-center gap-3 shadow-lg">
+  <span id="countM" class="w-7 h-7 rounded-full bg-white text-black grid place-items-center text-[14px] font-semibold">0</span><span data-i18n="checkout">Checkout</span><span aria-hidden="true">|</span><span id="totalM">0 DH</span>
+</button>
+
+<dialog id="dlg" class="ui m-auto rounded-[28px] p-0 w-[min(94vw,480px)] max-h-[92dvh] overflow-y-auto backdrop:bg-black/50">
+  <form id="form" class="p-6 sm:p-8 grid gap-4" novalidate>
+    <h2 class="text-[26px] font-medium" data-i18n="details">Your details</h2>
+    <p id="modeNote" class="text-[16px] text-neutral-500"></p>
+    <ul id="dlgLines" class="rounded-xl bg-neutral-50 px-4 py-2 text-[15px]"></ul>
+
+    <label class="grid gap-1 text-[15px] font-medium"><span data-i18n="f_name">Name</span><input name="name" required autocomplete="name" maxlength="60" class="inp"></label>
+    <label id="fPhone" class="grid gap-1 text-[15px] font-medium"><span data-i18n="f_phone">Phone number</span><input name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" dir="ltr" class="inp"></label>
+    <label id="fTable" class="grid gap-1 text-[15px] font-medium"><span data-i18n="f_table">Table number</span><input name="table" inputmode="numeric" maxlength="10" class="inp"></label>
+    <div id="fLoc" class="grid gap-2 text-[15px] font-medium"><span data-i18n="f_loc">Location</span>
+      <div class="rounded-xl border border-neutral-300 p-4 flex items-center justify-between gap-3">
+        <span id="locState" class="text-[15px] font-normal text-neutral-600"></span>
+        <button type="button" id="locBtn" class="shrink-0 rounded-full bg-neutral-100 px-4 py-2 text-[15px]"></button>
+      </div>
+    </div>
+    <div id="farBox" class="hidden rounded-xl border border-red-200 bg-red-50 p-4 text-[15px] text-red-700" role="alert"><p id="farText"></p>
+      <button type="button" id="toDelivery" class="mt-3 rounded-full bg-black px-5 py-2.5 text-[15px] text-white" data-i18n="to_delivery">Switch to delivery</button></div>
+    <label id="fAddr" class="grid gap-1 text-[15px] font-medium"><span data-i18n="f_addr">Address details (optional)</span><input name="addr" maxlength="120" data-i18n-ph="addr_ph" class="inp"></label>
+    <label class="grid gap-1 text-[15px] font-medium"><span data-i18n="f_note">Note (optional)</span><input name="note" maxlength="200" data-i18n-ph="note_ph" class="inp"></label>
+
+    <p id="sum" class="text-[19px] font-semibold"></p>
+    <p id="err" class="text-[15px] text-red-600" role="alert"></p>
+    <button id="confirmBtn" class="rounded-full bg-black text-white py-4 text-[20px]" data-i18n="confirm">Confirm order</button>
+    <button type="button" id="backBtn" class="text-[16px] text-neutral-500 py-1" data-i18n="back">Back</button>
+  </form>
+  <div id="doneBox" class="hidden p-8 text-center grid gap-4">
+    <div class="mx-auto w-16 h-16 rounded-full bg-lemon-zest grid place-items-center text-[32px] text-forest-ink">✓</div>
+    <h2 class="text-[26px] font-medium" id="doneTitle"></h2>
+    <p id="doneText" class="text-[17px] text-neutral-600"></p>
+    <button id="doneBtn" class="rounded-full bg-black text-white py-4 text-[18px]" data-i18n="close">Close</button>
+  </div>
+</dialog>
+
+<script src="/i18n.js"></script>
+<script>
+  const DATA = <%- data %>;
+  const cats = DATA.categories, dishes = DATA.dishes;
+  const cart = {};
+  let active = cats[0] && cats[0].id, mode = 'delivery', query = '', loc = null, shop = DATA.shop, locMsg = null;
+  const $ = id => document.getElementById(id);
+  const t = LM.t;
+  const isOpen = () => !shop || shop.open;
+  const kr = n => n + ' DH';
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const nm = m => LM.pick(m, 'name'), ds = m => LM.pick(m, 'desc');
+  const byId = id => dishes.find(d => d.id === Number(id));
+  const ids = () => Object.keys(cart).filter(id => cart[id] > 0);
+  const totals = () => ({ n: ids().reduce((s, id) => s + cart[id], 0), sum: ids().reduce((s, id) => s + cart[id] * byId(id).price, 0) });
+  const TRASH = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>';
+
+  function renderStatus() {
+    if (!shop) return;
+    $('openState').textContent = t(shop.open ? 'open_word' : 'closed_word');
+    $('openState').className = 'font-medium ' + (shop.open ? 'text-green-600' : 'text-red-600');
+    let note = '';
+    if (shop.open) note = shop.closes ? t('closes_at', { t: shop.closes }) : '';
+    else if (shop.opens) note = shop.opensDow === shop.today ? t('opens_at', { t: shop.opens }) : t('opens_day', { d: LM.day(shop.opensDow), t: shop.opens });
+    $('openNote').textContent = note; $('sep').classList.toggle('hidden', !note);
+    $('closedBanner').classList.toggle('hidden', shop.open); $('closedWhen').textContent = shop.open ? '' : note;
+  }
+  const loadStatus = () => fetch('/api/status').then(r => r.json()).then(s => { shop = s; renderAll(); }).catch(() => {});
+
+  function renderTabs() {
+    $('tabs').innerHTML = cats.map(c => `<button data-cat="${esc(c.id)}" class="shrink-0 rounded-full px-4 lg:px-6 py-2.5 lg:py-3 text-[16px] lg:text-[20px] ${c.id === active && !query ? 'bg-black text-white' : ''}">${esc(LM.pick(c, 'name'))}</button>`).join('');
+  }
+  function ctl(m) {
+    if (!m.available) return `<span class="text-[13px] font-medium text-neutral-500">${esc(t('sold_out'))}</span>`;
+    const q = cart[m.id] || 0;
+    if (!q && !isOpen()) return '<span class="w-10 h-10 rounded-full bg-neutral-300 text-white text-[26px] leading-none grid place-items-center" aria-hidden="true">+</span>';
+    if (!q) return `<button data-add="${m.id}" aria-label="${esc(t('add') + ' ' + nm(m))}" class="w-10 h-10 rounded-full bg-black text-white text-[26px] leading-none grid place-items-center">+</button>`;
+    return `<span class="inline-flex items-center gap-1 rounded-full bg-black text-white p-1">
+      <button data-dec="${m.id}" aria-label="${esc(t('remove'))}" class="w-8 h-8 rounded-full grid place-items-center text-[20px]">${q === 1 ? TRASH : '−'}</button>
+      <span class="min-w-5 text-center text-[15px]">${q}</span>
+      <button data-inc="${m.id}" aria-label="${esc(t('add'))}" class="w-8 h-8 rounded-full grid place-items-center text-[20px]">+</button></span>`;
+  }
+  function renderGrid() {
+    const q = query.trim().toLowerCase();
+    const list = q ? dishes.filter(m => (nm(m) + ' ' + ds(m)).toLowerCase().includes(q)) : dishes.filter(m => m.category === active);
+    const cat = cats.find(c => c.id === active);
+    $('catTitle').textContent = q ? t('results') : (cat ? LM.pick(cat, 'name') : '');
+    $('grid').innerHTML = list.length ? list.map(m => `
+      <article class="relative flex flex-row-reverse gap-4 py-4 border-b border-neutral-200 ${cart[m.id] ? 'max-lg:bg-neutral-100 max-lg:-mx-4 max-lg:px-4' : ''} ${m.available ? '' : 'opacity-60'} lg:flex-col lg:gap-0 lg:rounded-3xl lg:border lg:p-5">
+        <div class="relative shrink-0 lg:mx-auto">
+          ${m.img ? `<img src="/img/${esc(m.img)}" alt="" class="w-[104px] h-[104px] rounded-xl object-cover lg:w-auto lg:h-[160px] lg:rounded-lg">`
+                  : `<div class="w-[104px] h-[104px] rounded-xl bg-lemon-zest grid place-items-center text-forest-ink text-[52px] font-light lg:w-[240px] lg:h-[160px] lg:rounded-lg lg:text-[72px]" aria-hidden="true">Ó</div>`}
+          <div class="lg:hidden absolute end-1.5 bottom-1.5">${ctl(m)}</div>
+        </div>
+        <div class="flex-1 min-w-0 flex flex-col lg:mt-4">
+          ${m.is_new ? `<span class="mb-1 w-fit rounded-md bg-forest-ink px-2 py-0.5 text-[12px] font-semibold text-white">${esc(t('new_badge'))}</span>` : ''}
+          <h3 class="text-[17px] lg:text-[20px] font-medium leading-snug">${esc(nm(m))}</h3>
+          <p class="mt-1 lg:mt-2 text-[14px] lg:text-[16px] leading-[1.5] text-neutral-500 line-clamp-2 lg:line-clamp-3 flex-1">${esc(ds(m))}</p>
+          <div class="mt-2 lg:mt-4 flex items-center justify-between">
+            <span class="text-[16px] lg:text-[18px] font-medium">${kr(m.price)}</span>
+            <div class="hidden lg:block">${ctl(m)}</div>
+          </div>
+        </div>
+      </article>`).join('') : `<p class="py-6 text-neutral-500 text-[18px]">${esc(t('nothing'))}</p>`;
+  }
+  function renderCart() {
+    const tt = totals();
+    $('empty').classList.toggle('hidden', tt.n > 0);
+    $('lines').innerHTML = ids().map(id => {
+      const m = byId(id);
+      return `<li class="py-3 flex items-center gap-3 text-[16px]">
+        <span class="flex-1 leading-snug">${esc(nm(m))}<br><span class="text-neutral-500">${kr(m.price * cart[id])}</span></span>
+        <button data-dec="${id}" aria-label="${esc(t('remove'))}" class="w-9 h-9 rounded-full bg-neutral-100 grid place-items-center">${cart[id] === 1 ? TRASH : '−'}</button>
+        <span class="w-5 text-center" aria-live="polite">${cart[id]}</span>
+        <button data-inc="${id}" aria-label="${esc(t('add'))}" class="w-9 h-9 rounded-full bg-neutral-100 text-[20px]">+</button></li>`;
+    }).join('');
+    $('count').textContent = tt.n; $('total').textContent = kr(tt.sum);
+    $('countM').textContent = tt.n; $('totalM').textContent = kr(tt.sum);
+    $('checkoutBtn').disabled = tt.n === 0 || !isOpen();
+    const showBar = tt.n > 0 && isOpen(); $('barM').classList.toggle('hidden', !showBar); $('barM').classList.toggle('flex', showBar);
+  }
+  function renderMode() {
+    document.querySelectorAll('[data-mode]').forEach(b => {
+      const on = b.dataset.mode === mode;
+      b.className = b.className.replace(/\b(bg-white|shadow|font-medium|text-neutral-500)\b/g, '').trim() + (on ? ' bg-white shadow font-medium' : ' text-neutral-500');
+      b.setAttribute('aria-pressed', on);
+    });
+  }
+  const renderAll = () => { renderTabs(); renderGrid(); renderCart(); renderMode(); renderStatus(); renderLoc(); };
+
+  document.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    const d = b.dataset;
+    if (d.cat) { active = d.cat; query = ''; $('search').value = $('searchM').value = ''; renderTabs(); renderGrid(); }
+    if (d.add || d.inc) { const id = d.add || d.inc; cart[id] = Math.min((cart[id] || 0) + 1, 20); renderGrid(); renderCart(); }
+    if (d.dec) { cart[d.dec] = Math.max(0, cart[d.dec] - 1); renderGrid(); renderCart(); }
+    if (d.mode) { mode = d.mode; renderMode(); }
+  });
+  const onSearch = e => { query = e.target.value; $('search').value = $('searchM').value = query; renderTabs(); renderGrid(); };
+  $('search').addEventListener('input', onSearch); $('searchM').addEventListener('input', onSearch);
+  $('searchToggle').addEventListener('click', () => { $('searchRow').classList.toggle('hidden'); $('searchM').focus(); });
+  $('allergyBtn').addEventListener('click', () => $('allergyInfo').classList.toggle('hidden'));
+
+  // ---- Checkout
+  const dlg = $('dlg'), form = $('form');
+  function setLoc(btnKey, msgKey, vars, ok) { locMsg = { btnKey, msgKey, vars, ok }; renderLoc(); }
+  function renderLoc() {
+    const m = locMsg || { btnKey: 'loc_btn', msgKey: 'loc_none' };
+    $('locState').textContent = t(m.msgKey, m.vars); $('locBtn').textContent = t(m.btnKey);
+    $('locState').className = 'text-[15px] font-normal ' + (m.ok ? 'text-green-700' : 'text-neutral-600');
+  }
+  function locate() {
+    if (!navigator.geolocation) return setLoc('loc_retry', 'loc_nobrowser');
+    setLoc('loc_wait', 'loc_getting');
+    navigator.geolocation.getCurrentPosition(
+      p => { loc = { lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy }; setLoc('loc_update', 'loc_ok', { m: Math.round(loc.acc) }, true); checkFar(); },
+      () => { loc = null; setLoc('loc_retry', 'loc_blocked'); },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
+  }
+  $('locBtn').addEventListener('click', locate);
+  const dist = (a, b) => { const R = 6371000, r = x => x * Math.PI / 180, h = Math.sin(r(b.lat - a.lat) / 2) ** 2 + Math.cos(r(a.lat)) * Math.cos(r(b.lat)) * Math.sin(r(b.lng - a.lng) / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); };
+  function checkFar() {   // Dine-in: l'client khass ykoun 9rib mn l'mat3am
+    let far = false;
+    if (mode === 'dine-in' && shop && shop.geo && loc) {
+      const d = Math.round(dist(shop.geo, loc));
+      far = d - Math.min(loc.acc || 0, 150) > shop.geo.radius;
+      if (far) $('farText').textContent = t('far_msg', { m: d });
+    }
+    $('farBox').classList.toggle('hidden', !far); $('confirmBtn').disabled = far;
+  }
+  $('toDelivery').addEventListener('click', () => { mode = 'delivery'; renderMode(); dlg.close(); openCheckout(); });
+  function openCheckout() {
+    const tt = totals(); if (!tt.n || !isOpen()) return;
+    const del = mode === 'delivery';
+    const needLoc = del || !!(shop && shop.geo);
+    $('modeNote').textContent = t(del ? 'note_del' : 'note_dine') + (!del && needLoc ? ' ' + t('loc_why_dine') : '');
+    ['fPhone', 'fAddr'].forEach(id => $(id).classList.toggle('hidden', !del));
+    $('fLoc').classList.toggle('hidden', !needLoc);
+    $('fTable').classList.toggle('hidden', del);
+    $('dlgLines').innerHTML = ids().map(id => { const m = byId(id); return `<li class="flex justify-between gap-3 py-1.5"><span>${cart[id]} × ${esc(nm(m))}</span><span>${kr(cart[id] * m.price)}</span></li>`; }).join('');
+    $('sum').textContent = t('total') + ': ' + kr(tt.sum);
+    $('err').textContent = ''; form.classList.remove('hidden'); $('doneBox').classList.add('hidden');
+    renderLoc(); dlg.showModal();
+    if (needLoc && !loc) locate(); else checkFar();
+  }
+  $('checkoutBtn').addEventListener('click', openCheckout); $('barM').addEventListener('click', openCheckout);
+  $('backBtn').addEventListener('click', () => dlg.close()); $('doneBtn').addEventListener('click', () => dlg.close());
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault(); $('err').textContent = '';
+    const f = Object.fromEntries(new FormData(form)), del = mode === 'delivery';
+    if (!f.name.trim()) return $('err').textContent = t('err_name');
+    if (del && !/^\+?[\d\s-]{6,20}$/.test(f.phone.trim())) return $('err').textContent = t('err_phone');
+    if (del && !loc) return $('err').textContent = t('err_loc');
+    if (!del && shop && shop.geo && !loc) return $('err').textContent = t('err_loc_dine');
+    if (!del && !f.table.trim()) return $('err').textContent = t('err_table');
+    $('confirmBtn').disabled = true;
+    try {
+      const note = [f.addr && del ? 'Address: ' + f.addr : '', f.note].filter(Boolean).join(' | ');
+      const r = await fetch('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode, name: f.name, phone: f.phone, table: f.table, note, loc, items: ids().map(id => ({ id: Number(id), qty: cart[id] })) }) });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error);
+      ids().forEach(id => delete cart[id]); form.reset(); renderAll();
+      form.classList.add('hidden'); $('doneBox').classList.remove('hidden');
+      $('doneTitle').textContent = t('received', { n: d.num });
+      $('doneText').textContent = t(del ? 'done_del' : 'done_dine') + ' ' + t('total') + ': ' + kr(d.total) + '.';
+    } catch (er) { const k = 'err_' + er.message, msg = t(k); $('err').textContent = msg === k ? t('err_server') : msg; if (er.message === 'closed') loadStatus(); }
+    $('confirmBtn').disabled = false; checkFar();
+  });
+
+  LM.onChange(renderAll);
+  renderAll(); loadStatus(); setInterval(loadStatus, 60000);
+</script>
+</body>
+</html>

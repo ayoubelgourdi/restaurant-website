@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Limón — Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="ui bg-neutral-100 min-h-screen text-neutral-900">
+<div id="langSwitch" class="fixed top-3 end-3 z-40"></div>
+
+<main id="login" class="hidden min-h-screen grid place-items-center p-4">
+  <form id="loginForm" class="w-full max-w-[380px] rounded-[28px] bg-white p-8 grid gap-4" style="box-shadow:0 0 24px rgba(0,0,0,.07)">
+    <div class="w-16 h-16 rounded-full bg-lemon-zest grid place-items-center text-forest-ink text-[40px] font-light">Ó</div>
+    <h1 class="text-[24px] font-medium">Limón admin</h1>
+    <label class="grid gap-1 text-[15px] font-medium"><span data-i18n="pw">Password</span><input id="pw" type="password" autocomplete="current-password" required class="inp"></label>
+    <p id="loginErr" class="text-[15px] text-red-600" role="alert"></p>
+    <button class="rounded-full bg-black text-white py-4 text-[18px]" data-i18n="adm_confirm">Confirm</button>
+  </form>
+</main>
+
+<div id="app" class="hidden">
+  <header class="bg-white border-b border-neutral-200">
+    <div class="mx-auto max-w-[1300px] px-4 md:px-8 pt-4 flex flex-wrap items-center gap-x-6 gap-y-2">
+      <div class="flex items-center gap-3 me-auto">
+        <span class="w-10 h-10 rounded-full bg-lemon-zest grid place-items-center text-forest-ink text-[24px] font-light">Ó</span>
+        <span class="text-[20px] font-semibold">Limón</span>
+      </div>
+      <button id="logout" class="rounded-full bg-neutral-100 px-4 py-2 text-[15px] me-14" data-i18n="logout">Log out</button>
+      <nav class="w-full flex gap-1 overflow-x-auto" aria-label="Admin">
+        <button data-tab="orders" class="tab px-5 py-3 text-[17px] font-medium border-b-4 border-transparent"><span data-i18n="tab_orders">Orders</span> <span id="newCount" class="ms-1 rounded-full bg-lemon-zest px-2 py-0.5 text-[13px] text-forest-ink"></span></button>
+        <button data-tab="dishes" class="tab px-5 py-3 text-[17px] font-medium border-b-4 border-transparent" data-i18n="tab_dishes">Dishes</button>
+        <button data-tab="stats" class="tab px-5 py-3 text-[17px] font-medium border-b-4 border-transparent" data-i18n="tab_stats">Statistics</button>
+        <button data-tab="hours" class="tab px-5 py-3 text-[17px] font-medium border-b-4 border-transparent" data-i18n="tab_hours">Opening hours</button>
+        <button data-tab="settings" class="tab px-5 py-3 text-[17px] font-medium border-b-4 border-transparent" data-i18n="tab_settings">Settings</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-[1300px] px-4 md:px-8 py-6">
+    <!-- ORDERS: jdid = liser, qid t7dir = limn -->
+    <section id="v-orders">
+      <p class="text-[13px] text-neutral-500 mb-4" data-i18n="poll_hint">Updates every 5 seconds.</p>
+      <div class="grid lg:grid-cols-2 gap-6 items-start">
+        <div><h2 class="text-[20px] font-semibold mb-3" data-i18n="col_new">New</h2><div id="colNew" class="grid gap-4"></div></div>
+        <div><h2 class="text-[20px] font-semibold mb-3" data-i18n="col_prog">In progress</h2><div id="colProg" class="grid gap-4"></div></div>
+      </div>
+      <details class="mt-8"><summary class="cursor-pointer text-[18px] font-semibold" data-i18n="col_done">Done (latest)</summary><div id="colDone" class="mt-4 grid gap-4 lg:grid-cols-2"></div></details>
+    </section>
+
+    <!-- DISHES -->
+    <section id="v-dishes" class="hidden">
+      <div class="flex justify-between items-center mb-4"><h2 class="text-[22px] font-semibold" data-i18n="tab_dishes">Dishes</h2>
+        <button id="addDish" class="rounded-full bg-black text-white px-5 py-3 text-[16px]" data-i18n="add_dish">Add dish</button></div>
+      <div id="dishList" class="grid gap-6"></div>
+    </section>
+
+    <!-- STATS -->
+    <section id="v-stats" class="hidden">
+      <div class="flex flex-wrap items-end gap-3 mb-6">
+        <label class="grid gap-1 text-[14px] font-medium"><span data-i18n="from">From</span><input id="stFrom" type="date" class="inp !w-auto !py-2"></label>
+        <label class="grid gap-1 text-[14px] font-medium"><span data-i18n="to">To</span><input id="stTo" type="date" class="inp !w-auto !py-2"></label>
+        <button data-range="0" class="rounded-full bg-white px-4 py-2.5 text-[15px]" data-i18n="today">Today</button>
+        <button data-range="6" class="rounded-full bg-white px-4 py-2.5 text-[15px]" data-i18n="d7">Last 7 days</button>
+        <button data-range="29" class="rounded-full bg-white px-4 py-2.5 text-[15px]" data-i18n="d30">Last 30 days</button>
+      </div>
+      <div id="statBody"></div>
+    </section>
+
+    <!-- HOURS -->
+    <section id="v-hours" class="hidden max-w-[640px]">
+      <h2 class="text-[22px] font-semibold" data-i18n="tab_hours">Opening hours</h2>
+      <p class="mt-2 text-[15px] text-neutral-600" data-i18n="h_help"></p>
+      <p class="mt-3 text-[16px]"><span data-i18n="h_now"></span> <strong id="hNow"></strong></p>
+      <form id="hoursForm" class="mt-5 rounded-3xl bg-white p-5 grid gap-3">
+        <div id="hoursRows" class="grid gap-3"></div>
+        <fieldset class="mt-3 border-t border-neutral-200 pt-4"><legend class="text-[16px] font-semibold" data-i18n="h_override">Manual switch</legend>
+          <div class="mt-2 flex flex-wrap gap-x-6 gap-y-2 text-[16px]">
+            <label class="flex items-center gap-2"><input type="radio" name="ov" value="auto"><span data-i18n="ov_auto">Follow the hours</span></label>
+            <label class="flex items-center gap-2"><input type="radio" name="ov" value="open"><span data-i18n="ov_open">Open now</span></label>
+            <label class="flex items-center gap-2"><input type="radio" name="ov" value="closed"><span data-i18n="ov_closed">Closed now</span></label>
+          </div></fieldset>
+        <p id="hMsg" class="text-[15px]" role="status"></p>
+        <button class="rounded-full bg-black text-white px-6 py-3 text-[17px] w-fit" data-i18n="save">Save</button>
+      </form>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="v-settings" class="hidden max-w-[640px] grid gap-6">
+      <form id="pwForm" class="rounded-3xl bg-white p-5 grid gap-3">
+        <h2 class="text-[20px] font-semibold" data-i18n="pw_title">Change password</h2>
+        <label class="grid gap-1 text-[14px] font-medium"><span data-i18n="pw_current">Current password</span><input id="pwCur" type="password" autocomplete="current-password" required class="inp"></label>
+        <label class="grid gap-1 text-[14px] font-medium"><span data-i18n="pw_new">New password</span><input id="pwNew" type="password" autocomplete="new-password" required class="inp"></label>
+        <label class="grid gap-1 text-[14px] font-medium"><span data-i18n="pw_repeat">Repeat new password</span><input id="pwRep" type="password" autocomplete="new-password" required class="inp"></label>
+        <p id="pwMsg" class="text-[15px]" role="status"></p>
+        <button class="rounded-full bg-black text-white px-6 py-3 text-[16px] w-fit" data-i18n="save">Save</button>
+      </form>
+      <form id="geoForm" class="rounded-3xl bg-white p-5 grid gap-3">
+        <h2 class="text-[20px] font-semibold" data-i18n="geo_title">Restaurant location</h2>
+        <p class="text-[14px] text-neutral-600" data-i18n="geo_help"></p>
+        <p id="geoState" class="text-[14px] font-medium text-amber-700"></p>
+        <button type="button" id="geoHere" class="rounded-full bg-neutral-100 px-5 py-2.5 text-[15px] w-fit" data-i18n="geo_here">Use my current location</button>
+        <div class="grid grid-cols-2 gap-3">
+          <label class="grid gap-1 text-[14px] font-medium"><span data-i18n="geo_lat">Latitude</span><input id="gLat" type="number" step="any" min="-90" max="90" dir="ltr" class="inp"></label>
+          <label class="grid gap-1 text-[14px] font-medium"><span data-i18n="geo_lng">Longitude</span><input id="gLng" type="number" step="any" min="-180" max="180" dir="ltr" class="inp"></label>
+        </div>
+        <label class="grid gap-1 text-[14px] font-medium"><span data-i18n="geo_radius">Allowed distance (meters)</span><input id="gRad" type="number" min="20" max="5000" step="10" class="inp"></label>
+        <a id="gMap" target="_blank" rel="noopener" class="hidden underline text-[14px] w-fit" data-i18n="geo_map">View on map</a>
+        <p id="geoMsg" class="text-[15px]" role="status"></p>
+        <div class="flex flex-wrap gap-3"><button class="rounded-full bg-black text-white px-6 py-3 text-[16px]" data-i18n="save">Save</button>
+          <button type="button" id="geoClear" class="rounded-full bg-red-50 text-red-700 px-6 py-3 text-[16px]" data-i18n="geo_clear">Turn the check off</button></div>
+      </form>
+    </section>
+  </main>
+</div>
+
+<dialog id="dishDlg" class="ui m-auto rounded-[28px] p-0 w-[min(94vw,560px)] max-h-[92dvh] overflow-y-auto backdrop:bg-black/50">
+  <form id="dishForm" class="p-6 grid gap-3" novalidate>
+    <h2 class="text-[22px] font-semibold" id="dishTitle"></h2>
+    <label class="grid gap-1 text-[14px] font-medium"><span data-i18n="f_category">Category</span><select id="dCat" class="inp"></select></label>
+    <label class="grid gap-1 text-[14px] font-medium"><span data-i18n="f_name_en">Name (English)</span><input id="dNameEn" maxlength="80" class="inp"></label>
+    <label class="grid gap-1 text-[14px] font-medium"><span data-i18n="f_name_fr">Name (French)</span><input id="dNameFr" maxlength="80" class="inp"></label>
+    <label class="grid gap-1 text-[14px] font-medium"><span data-i18n="f_name_ar">Name (Arabic)</span><input id="dNameAr" maxlength="80" dir="rtl" class="inp"></label>
+    <label class="grid gap-1 text-[14px] font-medium"><span data-i18n="f_desc_en">Description (English)</span><textarea id="dDescEn" rows="2" maxlength="300" class="inp"></textarea></label>
+    <label class="grid gap-1 text-[14px] font-medium"><span data-i18n="f_desc_fr">Description (French)</span><textarea id="dDescFr" rows="2" maxlength="300" class="inp"></textarea></label>
+    <label class="grid gap-1 text-[14px] font-medium"><span data-i18n="f_desc_ar">Description (Arabic)</span><textarea id="dDescAr" rows="2" maxlength="300" dir="rtl" class="inp"></textarea></label>
+    <label class="grid gap-1 text-[14px] font-medium"><span data-i18n="f_price">Price (DH)</span><input id="dPrice" type="number" min="0" max="100000" step="1" inputmode="numeric" class="inp"></label>
+    <div class="grid gap-1 text-[14px] font-medium"><span data-i18n="f_photo">Photo</span>
+      <div class="flex items-center gap-3"><img id="dPrev" alt="" class="w-20 h-20 rounded-xl object-cover bg-lemon-zest hidden"><input id="dFile" type="file" accept="image/png,image/jpeg,image/webp" class="text-[14px] font-normal"></div>
+      <span id="dUp" class="text-[13px] text-neutral-500 font-normal"></span></div>
+    <label class="flex items-center gap-2 text-[15px]"><input id="dNew" type="checkbox"><span data-i18n="f_new">Show the "NEW" badge</span></label>
+    <label class="flex items-center gap-2 text-[15px]"><input id="dAvail" type="checkbox"><span data-i18n="available">Available</span></label>
+    <p id="dErr" class="text-[15px] text-red-600" role="alert"></p>
+    <div class="flex gap-3"><button class="rounded-full bg-black text-white px-6 py-3 text-[16px]" data-i18n="save">Save</button>
+      <button type="button" id="dCancel" class="rounded-full bg-neutral-100 px-6 py-3 text-[16px]" data-i18n="cancel">Cancel</button></div>
+  </form>
+</dialog>
+
+<script src="/i18n.js"></script>
+<script>
+  const $ = id => document.getElementById(id), t = LM.t;
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  let tab = 'orders', orders = [], D = { categories: [], dishes: [] }, lastId = null, timer = null, editId = null, dImg = null, shopSt = null, stats = null;
+
+  const api = async (url, opts) => { const r = await fetch(url, opts); if (r.status === 401 && !url.includes('login')) { show(false); throw new Error('auth'); } return r; };
+  const send = (url, method, body) => api(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  const beep = () => { try { const a = new (window.AudioContext || window.webkitAudioContext)(), o = a.createOscillator(), g = a.createGain(); o.connect(g); g.connect(a.destination); o.frequency.value = 880; g.gain.value = .15; o.start(); o.stop(a.currentTime + .3); } catch (e) {} };
+
+  function show(on) {
+    $('login').classList.toggle('hidden', on); $('app').classList.toggle('hidden', !on);
+    clearInterval(timer); if (on) timer = setInterval(loadOrders, 5000);
+  }
+  function setTab(x) {
+    tab = x;
+    document.querySelectorAll('[data-tab]').forEach(b => { const on = b.dataset.tab === x; b.classList.toggle('border-black', on); b.classList.toggle('text-neutral-500', !on); b.classList.toggle('border-transparent', !on); });
+    ['orders', 'dishes', 'stats', 'hours', 'settings'].forEach(v => $('v-' + v).classList.toggle('hidden', v !== x));
+    const f = { orders: loadOrders, dishes: loadDishes, stats: loadStats, hours: loadHours, settings: loadSettings }[x]; f().catch(() => {});
+  }
+
+  /* ---------- ORDERS ---------- */
+  async function loadOrders() {
+    const r = await api('/api/admin/orders'); orders = await r.json();
+    if ($('app').classList.contains('hidden')) show(true);
+    const max = orders.length ? Math.max(...orders.map(o => o.id)) : 0;
+    if (lastId !== null && max > lastId) beep(); lastId = max;
+    renderOrders();
+  }
+  function card(o) {
+    const del = o.mode === 'delivery', time = new Date(o.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const next = o.status === 'new' ? ['preparing', t('start_prep')] : o.status === 'preparing' ? ['done', t('mark_done')] : ['new', t('reopen')];
+    return `<article class="rounded-3xl bg-white p-5 ${o.status === 'new' ? 'ring-2 ring-lemon-zest' : ''}">
+      <div class="flex flex-wrap items-center gap-2">
+        <h3 class="text-[22px] font-semibold">#${o.id}</h3>
+        <span class="rounded-full px-3 py-1 text-[13px] font-medium ${del ? 'bg-forest-ink text-white' : 'bg-lemon-zest text-forest-ink'}">${del ? esc(t('delivery')) : esc(t('dine_tag', { t: o.table_no }))}</span>
+        <span class="text-[13px] text-neutral-500" dir="ltr">${time}</span><strong class="ms-auto text-[20px]">${o.total} DH</strong></div>
+      <p class="mt-3 text-[17px]"><strong>${esc(o.name)}</strong>${del ? ` · <a class="underline" dir="ltr" href="tel:${esc(o.phone)}">${esc(o.phone)}</a>` : ''}</p>
+      ${o.lat != null ? `<p class="mt-1 text-[15px]"><a class="underline" target="_blank" rel="noopener" href="https://www.google.com/maps?q=${encodeURIComponent(o.lat + ',' + o.lng)}">${esc(t('maps'))}</a> <span class="text-neutral-500">(±${o.acc} m)</span></p>` : ''}
+      <ul class="mt-3 text-[16px] divide-y divide-neutral-100">${o.items.map(i => `<li class="flex justify-between gap-3 py-1"><span>${i.qty} × ${esc(i.name)}</span><span>${i.qty * i.price} DH</span></li>`).join('')}</ul>
+      ${o.note ? `<p class="mt-3 rounded-xl bg-yellow-50 p-3 text-[14px]">${esc(t('note_lbl'))}: ${esc(o.note)}</p>` : ''}
+      <div class="mt-4 flex flex-wrap gap-2">
+        <button data-st="${o.id}" data-to="${next[0]}" class="rounded-full bg-black px-5 py-2.5 text-[15px] text-white">${esc(next[1])}</button>
+        <button data-print="${o.id}" class="rounded-full bg-neutral-100 px-5 py-2.5 text-[15px]">${esc(t('print'))}</button></div></article>`;
+  }
+  function renderOrders() {
+    const by = s => orders.filter(o => o.status === s), none = `<p class="text-neutral-500 text-[15px]">${esc(t('no_orders'))}</p>`;
+    const fill = (id, list) => $(id).innerHTML = list.length ? list.map(card).join('') : none;
+    fill('colNew', by('new').reverse()); fill('colProg', by('preparing').reverse()); fill('colDone', by('done'));
+    $('newCount').textContent = by('new').length || '';
+  }
+  function receipt(o) {
+    const w = window.open('', '_blank', 'width=380,height=680'); if (!w) return;
+    const del = o.mode === 'delivery', d = new Date(o.created_at).toLocaleString();
+    const rows = o.items.map(i => `<tr><td>${i.qty} × ${esc(i.name)}</td><td class="r">${i.qty * i.price} DH</td></tr>`).join('');
+    w.document.write(`<!doctype html><html lang="${LM.lang}" dir="${LM.dir}"><meta charset="utf-8"><title>#${o.id}</title>
+      <style>@page{size:80mm auto;margin:4mm}body{font:14px/1.45 'Courier New',monospace;width:72mm;margin:0 auto;color:#000}h1{text-align:center;margin:0;font-size:26px}
+      .c{text-align:center}hr{border:0;border-top:1px dashed #000;margin:8px 0}table{width:100%;border-collapse:collapse}td{padding:2px 0;vertical-align:top}.r{text-align:end;white-space:nowrap}.t td{font-weight:bold;font-size:17px;padding-top:6px}</style>
+      <h1>LIMÓN</h1><p class="c">Frogner · Oslo<br>${esc(d)}</p><hr>
+      <p><b>#${o.id}</b> · ${del ? esc(t('delivery')) : esc(t('dine_tag', { t: o.table_no }))}<br>${esc(o.name)}${del ? '<br>' + esc(o.phone) : ''}</p>
+      ${o.note ? `<p>${esc(t('note_lbl'))}: ${esc(o.note)}</p>` : ''}<hr><table>${rows}<tr class="t"><td>${esc(t('total'))}</td><td class="r">${o.total} DH</td></tr></table><hr>
+      <p class="c">${esc(t('r_thanks'))}</p><script>onload=function(){print();setTimeout(close,400)}<\/script>`);
+    w.document.close();
+  }
+  $('app').addEventListener('click', async e => {
+    const b = e.target.closest('button'); if (!b) return; const d = b.dataset;
+    if (d.tab) setTab(d.tab);
+    if (d.st) { await send(`/api/admin/orders/${d.st}/status`, 'POST', { status: d.to }); loadOrders(); }
+    if (d.print) receipt(orders.find(o => o.id === Number(d.print)));
+    if (d.range !== undefined) { const to = new Date(), from = new Date(); from.setDate(to.getDate() - Number(d.range)); $('stFrom').value = from.toLocaleDateString('en-CA'); $('stTo').value = to.toLocaleDateString('en-CA'); loadStats(); }
+    if (d.edit) openDish(D.dishes.find(x => x.id === Number(d.edit)));
+    if (d.del && confirm(t('confirm_delete'))) { await api('/api/admin/dishes/' + d.del, { method: 'DELETE' }); loadDishes(); }
+  });
+  $('app').addEventListener('change', async e => {
+    if (e.target.dataset.avail) { await send(`/api/admin/dishes/${e.target.dataset.avail}/available`, 'PATCH', { available: e.target.checked }); loadDishes(); }
+    if (e.target.id === 'stFrom' || e.target.id === 'stTo') loadStats();
+  });
+
+  /* ---------- DISHES ---------- */
+  async function loadDishes() { D = await (await api('/api/admin/dishes')).json(); renderDishes(); }
+  function renderDishes() {
+    $('dishList').innerHTML = D.categories.map(c => {
+      const list = D.dishes.filter(d => d.category === c.id);
+      return `<div><h3 class="text-[18px] font-semibold mb-2">${esc(LM.pick(c, 'name'))}</h3><div class="grid gap-2">${list.map(d => `
+        <div class="flex items-center gap-3 rounded-2xl bg-white p-3 ${d.available ? '' : 'opacity-60'}">
+          ${d.img ? `<img src="/img/${esc(d.img)}" alt="" class="w-14 h-14 rounded-xl object-cover">` : '<span class="w-14 h-14 rounded-xl bg-lemon-zest grid place-items-center text-forest-ink text-[28px] font-light">Ó</span>'}
+          <div class="flex-1 min-w-0"><p class="font-medium truncate">${esc(LM.pick(d, 'name'))}</p><p class="text-[14px] text-neutral-500">${d.price} DH</p></div>
+          <label class="flex items-center gap-2 text-[14px]"><input type="checkbox" data-avail="${d.id}" ${d.available ? 'checked' : ''}><span>${esc(t('available'))}</span></label>
+          <button data-edit="${d.id}" class="rounded-full bg-neutral-100 px-4 py-2 text-[14px]">${esc(t('edit'))}</button>
+          <button data-del="${d.id}" class="rounded-full bg-red-50 text-red-700 px-4 py-2 text-[14px]">${esc(t('delete'))}</button></div>`).join('')}</div></div>`;
+    }).join('');
+  }
+  function openDish(d) {
+    editId = d ? d.id : null; dImg = d ? d.img : null;
+    $('dishTitle').textContent = t(d ? 'edit' : 'add_dish');
+    $('dCat').innerHTML = D.categories.map(c => `<option value="${esc(c.id)}">${esc(LM.pick(c, 'name'))}</option>`).join('');
+    $('dCat').value = d ? d.category : D.categories[0].id;
+    $('dNameEn').value = d ? d.name_en : ''; $('dNameFr').value = d ? d.name_fr : ''; $('dNameAr').value = d ? d.name_ar : '';
+    $('dDescEn').value = d ? d.desc_en : ''; $('dDescFr').value = d ? d.desc_fr : ''; $('dDescAr').value = d ? d.desc_ar : '';
+    $('dPrice').value = d ? d.price : ''; $('dNew').checked = d ? !!d.is_new : false; $('dAvail').checked = d ? !!d.available : true;
+    $('dFile').value = ''; $('dUp').textContent = ''; $('dErr').textContent = '';
+    $('dPrev').classList.toggle('hidden', !dImg); if (dImg) $('dPrev').src = '/img/' + dImg;
+    $('dishDlg').showModal();
+  }
+  $('addDish').addEventListener('click', () => openDish(null));
+  $('dCancel').addEventListener('click', () => $('dishDlg').close());
+  $('dFile').addEventListener('change', e => {
+    const f = e.target.files[0]; if (!f) return; $('dUp').textContent = t('uploading');
+    const img = new Image();
+    img.onload = async () => {
+      const s = Math.min(1, 900 / Math.max(img.width, img.height)), c = document.createElement('canvas');
+      c.width = Math.round(img.width * s); c.height = Math.round(img.height * s); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      const r = await send('/api/admin/upload', 'POST', { data: c.toDataURL('image/jpeg', .85) }), j = await r.json();
+      if (!r.ok) { $('dUp').textContent = t('err_bad_image'); return; }
+      dImg = j.img; $('dUp').textContent = '✓'; $('dPrev').src = '/img/' + dImg; $('dPrev').classList.remove('hidden');
+    };
+    img.onerror = () => { $('dUp').textContent = t('err_bad_image'); };
+    img.src = URL.createObjectURL(f);
+  });
+  $('dishForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const body = { category: $('dCat').value, name_en: $('dNameEn').value, name_fr: $('dNameFr').value, name_ar: $('dNameAr').value, desc_en: $('dDescEn').value, desc_fr: $('dDescFr').value, desc_ar: $('dDescAr').value,
+      price: $('dPrice').value, img: dImg, is_new: $('dNew').checked, available: $('dAvail').checked };
+    const r = await send(editId ? '/api/admin/dishes/' + editId : '/api/admin/dishes', editId ? 'PUT' : 'POST', body);
+    if (!r.ok) { $('dErr').textContent = t('err_bad'); return; }
+    $('dishDlg').close(); loadDishes();
+  });
+
+  /* ---------- STATS ---------- */
+  async function loadStats() {
+    if (!$('stFrom').value) { const to = new Date(), from = new Date(); from.setDate(to.getDate() - 6); $('stFrom').value = from.toLocaleDateString('en-CA'); $('stTo').value = to.toLocaleDateString('en-CA'); }
+    stats = await (await api(`/api/admin/stats?from=${$('stFrom').value}&to=${$('stTo').value}`)).json(); renderStats();
+  }
+  function renderStats() {
+    if (!stats) return;
+    const s = stats, n = s.total.n, rev = s.total.revenue;
+    if (!n) { $('statBody').innerHTML = `<p class="text-neutral-500 text-[17px]">${esc(t('st_none'))}</p>`; return; }
+    const kpi = (l, v) => `<div class="rounded-3xl bg-white p-5"><p class="text-[14px] text-neutral-500">${esc(l)}</p><p class="mt-1 text-[30px] font-semibold">${v}</p></div>`;
+    const max = Math.max(...s.byDay.map(d => d.revenue));
+    $('statBody').innerHTML = `<div class="grid gap-4 sm:grid-cols-3">${kpi(t('tab_orders'), n)}${kpi(t('st_revenue'), rev + ' DH')}${kpi(t('st_avg'), Math.round(rev / n) + ' DH')}</div>
+      <div class="mt-6 grid gap-6 lg:grid-cols-2">
+        <div class="rounded-3xl bg-white p-5"><h3 class="font-semibold">${esc(t('st_day'))}</h3>
+          <div class="mt-4 flex items-end gap-1.5 h-44" dir="ltr">${s.byDay.map(d => `<div class="flex-1 min-w-0 flex flex-col items-center justify-end h-full" title="${d.day}: ${d.revenue} DH (${d.n})">
+            <span class="text-[10px] text-neutral-500">${d.revenue}</span><div class="w-full rounded-t bg-forest-ink" style="height:${Math.max(4, Math.round(d.revenue / max * 100))}%"></div>
+            <span class="text-[10px] text-neutral-500 mt-1">${d.day.slice(5)}</span></div>`).join('')}</div></div>
+        <div class="rounded-3xl bg-white p-5"><h3 class="font-semibold">${esc(t('st_type'))}</h3>
+          <table class="mt-3 w-full text-[15px]">${s.byMode.map(m => `<tr class="border-b border-neutral-100"><td class="py-2">${esc(t(m.mode === 'delivery' ? 'delivery' : 'dine_in'))}</td><td>${m.n}</td><td class="text-end">${m.revenue} DH</td></tr>`).join('')}</table>
+          <h3 class="mt-6 font-semibold">${esc(t('st_top'))}</h3>
+          <table class="mt-3 w-full text-[15px]"><tr class="text-neutral-500 text-[13px]"><td></td><td>${esc(t('qty'))}</td><td class="text-end">${esc(t('st_revenue'))}</td></tr>
+          ${s.top.map(d => `<tr class="border-b border-neutral-100"><td class="py-2">${esc(d.name)}</td><td>${d.qty}</td><td class="text-end">${d.revenue} DH</td></tr>`).join('')}</table></div></div>`;
+  }
+
+  /* ---------- HOURS ---------- */
+  async function loadHours() { shopSt = await (await fetch('/api/status')).json(); renderHours(); }
+  function renderHours() {
+    if (!shopSt) return;
+    $('hNow').textContent = t(shopSt.open ? 'open_word' : 'closed_word');
+    $('hoursRows').innerHTML = [1, 2, 3, 4, 5, 6, 0].map(d => { const h = shopSt.hours[d];
+      return `<div class="grid grid-cols-[110px_1fr] sm:grid-cols-[130px_auto_1fr_1fr] items-center gap-3 text-[15px]">
+        <span class="font-medium">${esc(LM.day(d))}</span>
+        <label class="flex items-center gap-2"><input type="checkbox" data-hc="${d}" ${h.closed ? 'checked' : ''}><span>${esc(t('closed_word'))}</span></label>
+        <label class="grid text-[12px] text-neutral-500">${esc(t('h_open'))}<input type="time" data-ho="${d}" value="${h.open}" class="inp !py-2" dir="ltr"></label>
+        <label class="grid text-[12px] text-neutral-500">${esc(t('h_close'))}<input type="time" data-hl="${d}" value="${h.close}" class="inp !py-2" dir="ltr"></label></div>`; }).join('');
+    document.querySelectorAll('[name=ov]').forEach(r => r.checked = r.value === shopSt.override);
+  }
+  $('hoursForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const hours = [0, 1, 2, 3, 4, 5, 6].map(d => ({ closed: document.querySelector(`[data-hc="${d}"]`).checked, open: document.querySelector(`[data-ho="${d}"]`).value, close: document.querySelector(`[data-hl="${d}"]`).value }));
+    const r = await send('/api/admin/hours', 'PUT', { hours, override: document.querySelector('[name=ov]:checked').value });
+    $('hMsg').textContent = r.ok ? t('h_saved') : t('err_bad'); $('hMsg').className = 'text-[15px] ' + (r.ok ? 'text-green-700' : 'text-red-600');
+    if (r.ok) loadHours();
+  });
+
+  /* ---------- SETTINGS ---------- */
+  const geoState = () => { $('geoState').textContent = shopSt && shopSt.geo ? '' : t('geo_off'); };
+  function geoMap() { const la = $('gLat').value, ln = $('gLng').value; $('gMap').classList.toggle('hidden', !(la && ln)); if (la && ln) $('gMap').href = 'https://www.google.com/maps?q=' + encodeURIComponent(la + ',' + ln); }
+  async function loadSettings() {
+    shopSt = await (await fetch('/api/status')).json(); const g = shopSt.geo;
+    $('gLat').value = g ? g.lat : ''; $('gLng').value = g ? g.lng : ''; $('gRad').value = g ? g.radius : 150; geoState(); geoMap();
+  }
+  const say = (id, ok, key) => { $(id).textContent = t(key); $(id).className = 'text-[15px] ' + (ok ? 'text-green-700' : 'text-red-600'); };
+  $('geoHere').addEventListener('click', () => {
+    if (!navigator.geolocation) return say('geoMsg', false, 'loc_nobrowser');
+    navigator.geolocation.getCurrentPosition(p => { $('gLat').value = p.coords.latitude.toFixed(6); $('gLng').value = p.coords.longitude.toFixed(6); geoMap(); $('geoMsg').textContent = '±' + Math.round(p.coords.accuracy) + ' m'; $('geoMsg').className = 'text-[15px] text-neutral-600'; },
+      () => say('geoMsg', false, 'loc_blocked'), { enableHighAccuracy: true, timeout: 15000 });
+  });
+  $('geoForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const r = await send('/api/admin/geo', 'PUT', { lat: $('gLat').value, lng: $('gLng').value, radius: $('gRad').value });
+    say('geoMsg', r.ok, r.ok ? 'h_saved' : 'err_bad'); if (r.ok) loadSettings();
+  });
+  $('geoClear').addEventListener('click', async () => { const r = await send('/api/admin/geo', 'PUT', { clear: true }); say('geoMsg', r.ok, r.ok ? 'h_saved' : 'err_bad'); if (r.ok) loadSettings(); });
+  $('pwForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    if ($('pwNew').value.length < 8) return say('pwMsg', false, 'err_pw_short');
+    if ($('pwNew').value !== $('pwRep').value) return say('pwMsg', false, 'err_pw_match');
+    const r = await send('/api/admin/password', 'POST', { current: $('pwCur').value, next: $('pwNew').value });
+    if (r.ok) { $('pwForm').reset(); return say('pwMsg', true, 'pw_saved'); }
+    const j = await r.json(); say('pwMsg', false, 'err_' + j.error);
+  });
+
+  /* ---------- LOGIN / BOOT ---------- */
+  $('logout').addEventListener('click', async () => { await fetch('/api/admin/logout', { method: 'POST' }); lastId = null; show(false); });
+  $('loginForm').addEventListener('submit', async e => {
+    e.preventDefault(); $('loginErr').textContent = '';
+    const r = await fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: $('pw').value }) });
+    if (!r.ok) { const j = await r.json(); $('loginErr').textContent = t('err_' + j.error); return; }
+    $('pw').value = ''; setTab('orders');
+  });
+  LM.onChange(() => { if ($('app').classList.contains('hidden')) return; renderOrders(); if (tab === 'dishes') renderDishes(); if (tab === 'stats') renderStats(); if (tab === 'hours') renderHours(); if (tab === 'settings') geoState(); });
+  setTab('orders');
+</script>
+</body>
+</html>
